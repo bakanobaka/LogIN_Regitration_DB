@@ -12,11 +12,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    EditText lnUsername, lnPassword;
+    EditText etUsername,etPassword;
     Button btnlogin;
     TextView createAccount;
     String username, password;
-    int formsuccess;
+    int formsuccess, userid;
 
     STIdb db;
 
@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         db = new STIdb(this);
 
-        lnUsername = findViewById(R.id.lnUsername);
-        lnPassword = findViewById(R.id.lnPassword);
+        etUsername = findViewById(R.id.etUsername);
+        etPassword = findViewById(R.id.etPassword);
         btnlogin = findViewById(R.id.btnlogin);
         createAccount = findViewById(R.id.createAccount);
 
@@ -44,31 +44,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btnlogin:
                 formsuccess = 2;
 
-                username = lnUsername.getText().toString();
-                password = lnPassword.getText().toString();
+                username = etUsername.getText().toString();
+                password = etPassword.getText().toString();
 
                 if (username.equals("")){
-                    lnUsername.setError("This Field is required");
+                    etUsername.setError("This Field is required");
                     formsuccess--;
                 }
 
                 if (password.equals("")){
-                    lnPassword.setError("This Field is required");
+                    etPassword.setError("This Field is required");
                     formsuccess--;
                 }
 
                 if (formsuccess == 2){
-                   /* HashMap<String, String> map_user = new HashMap();
-                    map_user.put(db.TBL_USER_USERNAME, username);
-                    map_user.put(db.TBL_USER_PASSWORD, password);
+                    userid = db.checkUser(username, password);
 
-                    if (db.checkUser(map_user)>0){
-                        Toast.makeText(this, "User Log-In Existed", Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        lnUsername.setError("Invalid Log-in Credentials");
-                    }*/
-                    Toast.makeText(this, "LOGIN SUCCESSFULL!", Toast.LENGTH_SHORT).show();
+                   if(userid >= 1){
+                       startActivity(new Intent(this, HomeActivity.class));
+                   }
+                   else{
+                       etUsername.setError("Invalid Login Credentials");
+                       etPassword.setError(" ");
+                   }
                 }
                 break;
             case R.id.createAccount:
