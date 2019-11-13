@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetch_users() {
-        all_users =db.getAllUsers();
+        all_users = db.getAllUsers();
         adapter = new ListViewAdapter(this, R.layout.adapter_users, all_users);
         lvUsers.setAdapter(adapter);
     }
@@ -56,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = inflater.inflate(R.layout.adapter_users, parent, false);
 
             tvFullname = convertView.findViewById(R.id.tvFullname);
@@ -67,14 +68,28 @@ public class HomeActivity extends AppCompatActivity {
             tvFullname.setText(all_users.get(position).get(db.TBL_USER_FULLNAME));
             tvUsername.setText(all_users.get(position).get(db.TBL_USER_USERNAME));
 
-            final int userid = Integer.parseInt(all_users.get(position).get(db.TBL_USER_ID));
+            /*final int userid = Integer.parseInt(all_users.get(position).get(db.TBL_USER_ID));*/
+           //DELETE
             ivDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
+                public void onClick(View v) {
+                    int userid = Integer.parseInt(all_users.get(position).get(db.TBL_USER_ID));
                     db.deleteUser(userid);
                     Toast.makeText(HomeActivity.this, "USER SUCCESSFULLY DELETED!", Toast.LENGTH_SHORT).show();
                     fetch_users();
 
+                }
+            });
+
+            /*final int userid = Integer.parseInt(all_users.get(position).get(db.TBL_USER_ID));*/
+            //EDIT
+            ivEdit.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    int userid = Integer.parseInt(all_users.get(position).get(db.TBL_USER_ID));
+                    Intent et = new Intent(getContext(), EditUserActivity.class);
+                    et.putExtra(db.TBL_USER_ID, userid);
+                    startActivity(et);
                 }
             });
 
